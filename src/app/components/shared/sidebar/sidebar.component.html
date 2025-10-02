@@ -1,0 +1,49 @@
+<div 
+  class="sidebar" 
+  [class.expanded]="isExpanded"
+  (mouseenter)="onMouseEnter()" 
+  (mouseleave)="onMouseLeave()"
+>
+  <!-- Sidebar Header -->
+  <div class="sidebar-header">
+    <div class="logo-container">
+      <i class="bi bi-grid-3x3-gap-fill logo-icon"></i>
+      <span class="logo-text" *ngIf="isExpanded">Sistema</span>
+    </div>
+  </div>
+
+  <!-- Navigation Items -->
+  <nav class="sidebar-nav">
+    <ul class="nav-list">
+      <li 
+        *ngFor="let item of navigationItems" 
+        class="nav-item"
+        [class.active]="item.isActive"
+      >
+        <a 
+          class="nav-link" 
+          (click)="navigateTo(item.path)"
+          [attr.data-bs-toggle]="!isExpanded ? 'tooltip' : null"
+          [attr.data-bs-placement]="!isExpanded ? 'right' : null"
+          [attr.title]="!isExpanded ? item.label : null"
+        >
+          <i [class]="item.icon + ' nav-icon'"></i>
+          <span class="nav-text" *ngIf="isExpanded">{{ item.label }}</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Sidebar Footer -->
+  <div class="sidebar-footer" *ngIf="isExpanded">
+    <div class="user-info">
+      <div class="user-avatar">
+        <i class="bi bi-person-circle"></i>
+      </div>
+      <div class="user-details">
+        <span class="user-name">Usuario</span>
+        <span class="user-role">Administrador</span>
+      </div>
+    </div>
+  </div>
+</div>
