@@ -28,13 +28,11 @@ export class AuthService {
   private readonly users: User[] = usersData as User[];
 
   constructor(private router: Router) {
-    // Check if user is already logged in
+
     this.loadUserFromStorage();
   }
 
-  /**
-   * Authenticate user with username/email and password
-   */
+
   login(credentials: LoginCredentials): { success: boolean; message: string; user?: User } {
     const { usernameOrEmail, password } = credentials;
     

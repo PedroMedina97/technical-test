@@ -145,6 +145,73 @@
     }
   }
 
+  // Language Selector
+  .language-selector {
+    position: absolute;
+    bottom: 120px;
+    left: 0;
+    right: 0;
+    padding: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.05);
+
+    .language-label {
+      color: #ecf0f1;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+
+      i {
+        color: #3498db;
+        font-size: 14px;
+      }
+    }
+
+    .language-options {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+
+      .language-btn {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #bdc3c7;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: 11px;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        &:hover {
+          background: rgba(52, 152, 219, 0.1);
+          border-color: #3498db;
+          color: #3498db;
+        }
+
+        &.active {
+          background: rgba(52, 152, 219, 0.2);
+          border-color: #3498db;
+          color: #3498db;
+          font-weight: 600;
+        }
+
+        .language-flag {
+          font-size: 14px;
+        }
+
+        .language-name {
+          font-size: 11px;
+        }
+      }
+    }
+  }
+
   // Sidebar Footer
   .sidebar-footer {
     position: absolute;

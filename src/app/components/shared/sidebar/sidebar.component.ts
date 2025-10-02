@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService, User } from '../../../services/auth.service';
+import { TranslationService, Language } from '../../../services/translation.service';
+import { TranslatePipe } from '../../../pipes/translate.pipe';
 
 interface NavigationItem {
   path: string;
@@ -13,7 +15,7 @@ interface NavigationItem {
 
 @Component({
   selector: 'app-sidebar',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslatePipe],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
@@ -22,25 +24,28 @@ export class SidebarComponent implements OnInit, OnDestroy {
   currentRoute = '';
   currentUser: User | null = null;
   private userSubscription: Subscription = new Subscription();
+  currentLanguage: Language = 'es';
+  availableLanguages: { code: Language; name: string }[] = [];
 
   navigationItems: NavigationItem[] = [
     {
       path: '/home',
       icon: 'bi-house-door',
-      label: 'Inicio',
+      label: 'navigation.home',
       isActive: false
     },
     {
       path: '/users',
       icon: 'bi-people',
-      label: 'Usuarios',
+      label: 'navigation.users',
       isActive: false
     }
   ];
 
   constructor(
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private translationService: TranslationService
   ) {
     this.updateActiveRoute();
     this.router.events.subscribe(() => {
@@ -52,6 +57,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.userSubscription = this.authService.currentUser$.subscribe(
       (user: User | null) => this.currentUser = user
     );
+    
+    this.currentLanguage = this.translationService.getCurrentLanguage();
+    this.availableLanguages = this.translationService.getAvailableLanguages();
   }
 
   ngOnDestroy(): void {
@@ -84,5 +92,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
   getUserRoleLabel(): string {
     if (!this.currentUser) return '';
     return this.currentUser.role === 'manager' ? 'Manager' : 'Coordinador';
+  }
+
+  changeLanguage(language: Language): void {
+    this.currentLanguage = language;
+    this.translationService.setLanguage(language);
   }
 }

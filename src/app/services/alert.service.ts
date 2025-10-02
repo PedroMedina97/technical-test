@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { TranslationService } from './translation.service';
 
 export interface Alert {
   id: string;
@@ -18,7 +19,7 @@ export class AlertService {
   private alertsSubject = new BehaviorSubject<Alert[]>([]);
   public alerts$ = this.alertsSubject.asObservable();
 
-  constructor() {}
+  constructor(private translationService: TranslationService) {}
 
   /**
    * Show success alert
@@ -26,8 +27,8 @@ export class AlertService {
   success(message: string, title?: string, options?: Partial<Alert>): void {
     this.addAlert({
       type: 'success',
-      message,
-      title,
+      message: this.translateMessage(message),
+      title: title ? this.translateMessage(title) : undefined,
       dismissible: true,
       autoClose: true,
       duration: 5000,
@@ -41,8 +42,8 @@ export class AlertService {
   error(message: string, title?: string, options?: Partial<Alert>): void {
     this.addAlert({
       type: 'danger',
-      message,
-      title,
+      message: this.translateMessage(message),
+      title: title ? this.translateMessage(title) : undefined,
       dismissible: true,
       autoClose: true,
       duration: 5000,
@@ -56,8 +57,8 @@ export class AlertService {
   warning(message: string, title?: string, options?: Partial<Alert>): void {
     this.addAlert({
       type: 'warning',
-      message,
-      title,
+      message: this.translateMessage(message),
+      title: title ? this.translateMessage(title) : undefined,
       dismissible: true,
       autoClose: true,
       duration: 7000,
@@ -71,8 +72,8 @@ export class AlertService {
   info(message: string, title?: string, options?: Partial<Alert>): void {
     this.addAlert({
       type: 'info',
-      message,
-      title,
+      message: this.translateMessage(message),
+      title: title ? this.translateMessage(title) : undefined,
       dismissible: true,
       autoClose: true,
       duration: 5000,
@@ -127,5 +128,17 @@ export class AlertService {
    */
   private generateId(): string {
     return Math.random().toString(36).substr(2, 9);
+  }
+
+  /**
+   * Translate message if it's a translation key
+   */
+  private translateMessage(message: string): string {
+    // If message contains dots, it's likely a translation key
+    if (message.includes('.')) {
+      return this.translationService.translate(message);
+    }
+    // Otherwise, return the message as is
+    return message;
   }
 }

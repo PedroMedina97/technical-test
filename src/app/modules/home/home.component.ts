@@ -6,11 +6,12 @@ import { UsersService } from '../../services/users.service';
 import { FeaturedUsersService, User } from '../../services/featured-users.service';
 import { AuthService } from '../../services/auth.service';
 import { AlertService } from '../../services/alert.service';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -22,7 +23,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   featuredUsers: User[] = [];
   private featuredUsersSubscription: Subscription = new Subscription();
   
-  // Filter properties
   nameFilter = '';
   emailFilter = '';
   
@@ -58,7 +58,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       (data: any) => {
         this.users = data as User[];
         this.filteredUsers = [...this.users];
-        console.log(JSON.stringify(this.users));
       },
       (error) => {
         console.log(error);
@@ -118,7 +117,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.router.navigate(['/users']);
   }
 
-  // Role-based permission methods
   canCreate(): boolean {
     return this.authService.canCreate();
   }
@@ -135,7 +133,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     return this.authService.canRead();
   }
 
-  // Enhanced methods with role checks
   addToFeaturedWithPermission(user: User) {
     if (!this.canView()) {
       this.alertService.warning('No tienes permisos para realizar esta acción', 'Acceso denegado');

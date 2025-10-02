@@ -18,13 +18,13 @@ export class AuthGuard implements CanActivate {
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     
-    // Check if user is logged in
+
     if (!this.authService.isLoggedIn()) {
       this.router.navigate(['/login']);
       return false;
     }
 
-    // Check role-based permissions if specified in route data
+
     const requiredRole = route.data['role'];
     if (requiredRole) {
       const user = this.authService.getCurrentUser();
@@ -34,7 +34,6 @@ export class AuthGuard implements CanActivate {
       }
     }
 
-    // Check specific permissions if specified in route data
     const requiredPermission = route.data['permission'];
     if (requiredPermission) {
       let hasPermission = false;

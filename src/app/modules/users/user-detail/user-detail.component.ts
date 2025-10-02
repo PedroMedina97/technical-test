@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslatePipe } from '../../../pipes/translate.pipe';
 
 interface User {
   id: number;
@@ -28,7 +29,7 @@ interface User {
 
 @Component({
   selector: 'app-user-detail',
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './user-detail.component.html',
   styleUrl: './user-detail.component.scss'
 })
@@ -54,7 +55,6 @@ export class UserDetailComponent implements OnInit {
       if (this.user) {
         this.isLoading = false;
       } else {
-        // User not found, redirect to users list
         this.router.navigate(['/users']);
       }
     } else {

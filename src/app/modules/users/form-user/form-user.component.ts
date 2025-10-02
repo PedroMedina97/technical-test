@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { TranslatePipe } from '../../../pipes/translate.pipe';
 
 interface User {
   id: number;
@@ -29,7 +30,7 @@ interface User {
 
 @Component({
   selector: 'app-form-user',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslatePipe],
   templateUrl: './form-user.component.html',
   styleUrl: './form-user.component.scss'
 })
@@ -119,7 +120,6 @@ export class FormUserComponent implements OnInit {
       const formValue = this.userForm.value;
 
       if (this.isEditMode && this.userId) {
-        // Update existing user
         const userIndex = users.findIndex(u => u.id === this.userId);
         if (userIndex !== -1) {
           users[userIndex] = { ...formValue, id: this.userId };
@@ -127,7 +127,6 @@ export class FormUserComponent implements OnInit {
           console.log('User updated successfully');
         }
       } else {
-        // Create new user
         const newUser: User = {
           ...formValue,
           id: this.getNextId()
@@ -243,7 +242,6 @@ export class FormUserComponent implements OnInit {
     this.router.navigate(['/users']);
   }
 
-  // Text formatting methods
   formatTitleCase(event: any, fieldName: string) {
     const value = event.target.value;
     const formattedValue = this.toTitleCase(value);
@@ -284,27 +282,22 @@ export class FormUserComponent implements OnInit {
     }, 1000);
   }
 
-  // Phone input validation - only allow numbers, +, #, spaces, hyphens and parentheses
   onPhoneInput(event: any) {
     const input = event.target;
     const value = input.value;
     
-    // Remove any characters that are not allowed
     const filteredValue = value.replace(/[^0-9+#\s\-\(\)]/g, '');
     
-    // Update the input value if it was filtered
     if (value !== filteredValue) {
       input.value = filteredValue;
       this.userForm.get('phone')?.setValue(filteredValue, { emitEvent: false });
     }
   }
 
-  // Prevent invalid characters from being typed
   onPhoneKeyPress(event: KeyboardEvent) {
     const allowedChars = /[0-9+#\s\-\(\)]/;
     const key = event.key;
     
-    // Allow special keys (backspace, delete, tab, escape, enter, etc.)
     if (event.ctrlKey || event.metaKey || event.altKey || 
         key === 'Backspace' || key === 'Delete' || key === 'Tab' || 
         key === 'Escape' || key === 'Enter' || key === 'ArrowLeft' || 
@@ -312,7 +305,6 @@ export class FormUserComponent implements OnInit {
       return;
     }
     
-    // Block invalid characters
     if (!allowedChars.test(key)) {
       event.preventDefault();
     }

@@ -5,11 +5,12 @@ import { Router } from '@angular/router';
 import { FeaturedUsersService, User } from '../../services/featured-users.service';
 import { AuthService } from '../../services/auth.service';
 import { AlertService } from '../../services/alert.service';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-users',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
 })
@@ -21,12 +22,10 @@ export class UsersComponent implements OnInit, OnDestroy {
   featuredUsers: User[] = [];
   private featuredUsersSubscription: Subscription = new Subscription();
   
-  // Filter properties
   nameFilter = '';
   emailFilter = '';
   companyFilter = '';
   
-  // Loading states
   isLoading = false;
   isDeleting = false;
   
@@ -57,7 +56,6 @@ export class UsersComponent implements OnInit, OnDestroy {
   private loadUsers() {
     this.isLoading = true;
     
-    // Try to load from localStorage first
     const savedUsers = localStorage.getItem('users');
     if (savedUsers) {
       this.users = JSON.parse(savedUsers);
@@ -65,13 +63,11 @@ export class UsersComponent implements OnInit, OnDestroy {
       this.isLoading = false;
       console.log('Users loaded from localStorage');
     } else {
-      // Load initial users if no saved data
       this.loadInitialUsers();
     }
   }
 
   private loadInitialUsers() {
-    // Initial users list
     const initialUsers: User[] = [
       {
         id: 1,
@@ -142,11 +138,9 @@ export class UsersComponent implements OnInit, OnDestroy {
     if (this.userToDelete) {
       this.isDeleting = true;
       
-      // Remove from array
       this.users = this.users.filter(u => u.id !== this.userToDelete!.id);
       this.filteredUsers = this.filteredUsers.filter(u => u.id !== this.userToDelete!.id);
       
-      // Save to localStorage
       this.saveToLocalStorage();
       
       this.isDeleting = false;
@@ -207,7 +201,6 @@ export class UsersComponent implements OnInit, OnDestroy {
     return this.authService.canRead();
   }
 
-  // Enhanced delete method with role check
   deleteUserWithPermission(user: User) {
     if (!this.canDelete()) {
       this.alertService.warning('No tienes permisos para eliminar usuarios', 'Acceso denegado');
@@ -216,7 +209,6 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.deleteUser(user);
   }
 
-  // Enhanced edit method with role check
   editUserWithPermission(user: User) {
     if (!this.canUpdate()) {
       this.alertService.warning('No tienes permisos para editar usuarios', 'Acceso denegado');

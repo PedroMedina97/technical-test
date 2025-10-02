@@ -1,12 +1,11 @@
 <div class="container-fluid p-4">
   <div class="row justify-content-center">
     <div class="col-12 col-lg-10 col-xl-8">
-      <!-- Header -->
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="mb-0">
           <i class="bi bi-person-plus me-2" *ngIf="!isEditMode"></i>
           <i class="bi bi-person-gear me-2" *ngIf="isEditMode"></i>
-          {{ isEditMode ? 'Editar Usuario' : 'Crear Usuario' }}
+          {{ isEditMode ? ('users.editUser' | translate) : ('users.createUser' | translate) }}
         </h1>
         <button 
           type="button" 
@@ -14,25 +13,23 @@
           (click)="cancel()"
         >
           <i class="bi bi-arrow-left me-1"></i>
-          Volver
+          {{ 'common.back' | translate }}
         </button>
       </div>
 
-      <!-- Loading State -->
       <div *ngIf="isLoading" class="text-center py-5">
         <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Cargando usuario...</span>
+          <span class="visually-hidden">{{ 'common.loading' | translate }}</span>
         </div>
-        <p class="mt-3 text-muted">Cargando datos del usuario...</p>
+        <p class="mt-3 text-muted">{{ 'common.loading' | translate }}</p>
       </div>
 
-      <!-- Form -->
       <form [formGroup]="userForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
         <div class="card">
           <div class="card-header">
             <h5 class="mb-0">
               <i class="bi bi-person me-2"></i>
-              Información Personal
+              {{ 'users.personalInfo' | translate }}
             </h5>
           </div>
           <div class="card-body">
@@ -40,7 +37,7 @@
               <div class="col-md-6">
                 <label for="name" class="form-label">
                   <i class="bi bi-person me-1"></i>
-                  Nombre Completo *
+                  {{ 'common.name' | translate }} *
                 </label>
                 <input 
                   type="text" 
@@ -48,7 +45,7 @@
                   id="name"
                   formControlName="name"
                   [class.is-invalid]="isFieldInvalid('name')"
-                  placeholder="Ingresa el nombre completo"
+                  [placeholder]="'forms.placeholders.enterFullName' | translate"
                   (blur)="formatTitleCase($event, 'name')"
                 >
                 <div *ngIf="isFieldInvalid('name')" class="invalid-feedback">
@@ -58,7 +55,7 @@
               <div class="col-md-6">
                 <label for="username" class="form-label">
                   <i class="bi bi-at me-1"></i>
-                  Nombre de Usuario *
+                  {{ 'common.username' | translate }} *
                 </label>
                 <input 
                   type="text" 
@@ -66,7 +63,7 @@
                   id="username"
                   formControlName="username"
                   [class.is-invalid]="isFieldInvalid('username')"
-                  placeholder="Ingresa el nombre de usuario"
+                  [placeholder]="'forms.placeholders.enterUsername' | translate"
                 >
                 <div *ngIf="isFieldInvalid('username')" class="invalid-feedback">
                   {{ getFieldError('username') }}
@@ -75,7 +72,7 @@
               <div class="col-md-6">
                 <label for="email" class="form-label">
                   <i class="bi bi-envelope me-1"></i>
-                  Email *
+                  {{ 'common.email' | translate }} *
                 </label>
                 <input 
                   type="email" 
@@ -83,7 +80,7 @@
                   id="email"
                   formControlName="email"
                   [class.is-invalid]="isFieldInvalid('email')"
-                  placeholder="Ingresa el email"
+                  [placeholder]="'forms.placeholders.enterEmail' | translate"
                 >
                 <div *ngIf="isFieldInvalid('email')" class="invalid-feedback">
                   {{ getFieldError('email') }}
@@ -92,7 +89,7 @@
               <div class="col-md-6">
                 <label for="phone" class="form-label">
                   <i class="bi bi-telephone me-1"></i>
-                  Teléfono *
+                  {{ 'common.phone' | translate }} *
                 </label>
                 <input 
                   type="tel" 
@@ -100,7 +97,7 @@
                   id="phone"
                   formControlName="phone"
                   [class.is-invalid]="isFieldInvalid('phone')"
-                  placeholder="Ej: +1 (555) 123-4567 o 555#123"
+                  [placeholder]="'forms.placeholders.phoneExample' | translate"
                   maxlength="20"
                   minlength="10"
                   (input)="onPhoneInput($event)"
@@ -111,13 +108,13 @@
                 </div>
                 <div class="form-text">
                   <i class="bi bi-info-circle me-1"></i>
-                  Solo se permiten números (0-9), +, #, espacios, guiones (-) y paréntesis ()
+                  {{ 'forms.help.phoneFormat' | translate }}
                 </div>
               </div>
               <div class="col-12">
                 <label for="website" class="form-label">
                   <i class="bi bi-globe me-1"></i>
-                  Sitio Web *
+                  {{ 'common.website' | translate }} *
                 </label>
                 <input 
                   type="url" 
@@ -125,7 +122,7 @@
                   id="website"
                   formControlName="website"
                   [class.is-invalid]="isFieldInvalid('website')"
-                  placeholder="Ingresa el sitio web"
+                  [placeholder]="'forms.placeholders.enterWebsite' | translate"
                 >
                 <div *ngIf="isFieldInvalid('website')" class="invalid-feedback">
                   {{ getFieldError('website') }}
@@ -135,12 +132,11 @@
           </div>
         </div>
 
-        <!-- Address Information -->
         <div class="card mt-4">
           <div class="card-header">
             <h5 class="mb-0">
               <i class="bi bi-geo-alt me-2"></i>
-              Información de Dirección
+              {{ 'users.addressInfo' | translate }}
             </h5>
           </div>
           <div class="card-body" formGroupName="address">
@@ -148,7 +144,7 @@
               <div class="col-md-6">
                 <label for="street" class="form-label">
                   <i class="bi bi-signpost me-1"></i>
-                  Calle *
+                  {{ 'common.street' | translate }} *
                 </label>
                 <input 
                   type="text" 
@@ -156,7 +152,7 @@
                   id="street"
                   formControlName="street"
                   [class.is-invalid]="isNestedFieldInvalid('address', 'street')"
-                  placeholder="Ingresa la calle"
+                  [placeholder]="'forms.placeholders.enterStreet' | translate"
                   (blur)="formatAddressField($event, 'address', 'street')"
                 >
                 <div *ngIf="isNestedFieldInvalid('address', 'street')" class="invalid-feedback">
@@ -166,7 +162,7 @@
               <div class="col-md-6">
                 <label for="suite" class="form-label">
                   <i class="bi bi-building me-1"></i>
-                  Suite/Apartamento *
+                  {{ 'users.suite' | translate }} *
                 </label>
                 <input 
                   type="text" 
@@ -174,7 +170,7 @@
                   id="suite"
                   formControlName="suite"
                   [class.is-invalid]="isNestedFieldInvalid('address', 'suite')"
-                  placeholder="Ingresa la suite o apartamento"
+                  [placeholder]="'forms.placeholders.enterSuite' | translate"
                 >
                 <div *ngIf="isNestedFieldInvalid('address', 'suite')" class="invalid-feedback">
                   {{ getNestedFieldError('address', 'suite') }}
@@ -183,7 +179,7 @@
               <div class="col-md-6">
                 <label for="city" class="form-label">
                   <i class="bi bi-geo me-1"></i>
-                  Ciudad *
+                  {{ 'common.city' | translate }} *
                 </label>
                 <input 
                   type="text" 
@@ -191,7 +187,7 @@
                   id="city"
                   formControlName="city"
                   [class.is-invalid]="isNestedFieldInvalid('address', 'city')"
-                  placeholder="Ingresa la ciudad"
+                  [placeholder]="'forms.placeholders.enterCity' | translate"
                   (blur)="formatAddressField($event, 'address', 'city')"
                 >
                 <div *ngIf="isNestedFieldInvalid('address', 'city')" class="invalid-feedback">
@@ -201,7 +197,7 @@
               <div class="col-md-6">
                 <label for="zipcode" class="form-label">
                   <i class="bi bi-mailbox me-1"></i>
-                  Código Postal *
+                  {{ 'common.zipcode' | translate }} *
                 </label>
                 <input 
                   type="text" 
@@ -209,7 +205,7 @@
                   id="zipcode"
                   formControlName="zipcode"
                   [class.is-invalid]="isNestedFieldInvalid('address', 'zipcode')"
-                  placeholder="Ingresa el código postal"
+                  [placeholder]="'forms.placeholders.enterZipcode' | translate"
                 >
                 <div *ngIf="isNestedFieldInvalid('address', 'zipcode')" class="invalid-feedback">
                   {{ getNestedFieldError('address', 'zipcode') }}
@@ -217,18 +213,17 @@
               </div>
             </div>
 
-            <!-- Coordinates -->
             <div class="row g-3 mt-3" formGroupName="geo">
               <div class="col-12">
                 <h6 class="text-muted mb-3">
                   <i class="bi bi-geo-alt-fill me-2"></i>
-                  Coordenadas Geográficas
+                  {{ 'users.coordinates' | translate }}
                 </h6>
               </div>
               <div class="col-md-6">
                 <label for="lat" class="form-label">
                   <i class="bi bi-latitude me-1"></i>
-                  Latitud *
+                  {{ 'users.latitude' | translate }} *
                 </label>
                 <input 
                   type="number" 
@@ -237,7 +232,7 @@
                   id="lat"
                   formControlName="lat"
                   [class.is-invalid]="isDeepFieldInvalid('address', 'geo', 'lat')"
-                  placeholder="Ej: -37.3159"
+                  [placeholder]="'forms.placeholders.latitudeExample' | translate"
                 >
                 <div *ngIf="isDeepFieldInvalid('address', 'geo', 'lat')" class="invalid-feedback">
                   {{ getDeepFieldError('address', 'geo', 'lat') }}
@@ -246,7 +241,7 @@
               <div class="col-md-6">
                 <label for="lng" class="form-label">
                   <i class="bi bi-longitude me-1"></i>
-                  Longitud *
+                  {{ 'users.longitude' | translate }} *
                 </label>
                 <input 
                   type="number" 
@@ -255,7 +250,7 @@
                   id="lng"
                   formControlName="lng"
                   [class.is-invalid]="isDeepFieldInvalid('address', 'geo', 'lng')"
-                  placeholder="Ej: 81.1496"
+                  [placeholder]="'forms.placeholders.longitudeExample' | translate"
                 >
                 <div *ngIf="isDeepFieldInvalid('address', 'geo', 'lng')" class="invalid-feedback">
                   {{ getDeepFieldError('address', 'geo', 'lng') }}
@@ -265,12 +260,11 @@
           </div>
         </div>
 
-        <!-- Company Information -->
         <div class="card mt-4">
           <div class="card-header">
             <h5 class="mb-0">
               <i class="bi bi-building me-2"></i>
-              Información de la Empresa
+              {{ 'users.companyInfo' | translate }}
             </h5>
           </div>
           <div class="card-body" formGroupName="company">
@@ -278,7 +272,7 @@
               <div class="col-12">
                 <label for="companyName" class="form-label">
                   <i class="bi bi-building me-1"></i>
-                  Nombre de la Empresa *
+                  {{ 'common.company' | translate }} *
                 </label>
                 <input 
                   type="text" 
@@ -286,7 +280,7 @@
                   id="companyName"
                   formControlName="name"
                   [class.is-invalid]="isNestedFieldInvalid('company', 'name')"
-                  placeholder="Ingresa el nombre de la empresa"
+                  [placeholder]="'forms.placeholders.enterCompanyName' | translate"
                   (blur)="formatCompanyName($event)"
                 >
                 <div *ngIf="isNestedFieldInvalid('company', 'name')" class="invalid-feedback">
@@ -296,7 +290,7 @@
               <div class="col-12">
                 <label for="catchPhrase" class="form-label">
                   <i class="bi bi-quote me-1"></i>
-                  Eslogan *
+                  {{ 'users.catchPhrase' | translate }} *
                 </label>
                 <input 
                   type="text" 
@@ -304,7 +298,7 @@
                   id="catchPhrase"
                   formControlName="catchPhrase"
                   [class.is-invalid]="isNestedFieldInvalid('company', 'catchPhrase')"
-                  placeholder="Ingresa el eslogan de la empresa"
+                  [placeholder]="'forms.placeholders.enterCatchPhrase' | translate"
                 >
                 <div *ngIf="isNestedFieldInvalid('company', 'catchPhrase')" class="invalid-feedback">
                   {{ getNestedFieldError('company', 'catchPhrase') }}
@@ -313,14 +307,14 @@
               <div class="col-12">
                 <label for="bs" class="form-label">
                   <i class="bi bi-info-circle me-1"></i>
-                  Descripción del Negocio *
+                  {{ 'users.businessDescription' | translate }} *
                 </label>
                 <textarea 
                   class="form-control" 
                   id="bs"
                   formControlName="bs"
                   [class.is-invalid]="isNestedFieldInvalid('company', 'bs')"
-                  placeholder="Ingresa la descripción del negocio"
+                  [placeholder]="'forms.placeholders.enterBusinessDescription' | translate"
                   rows="3"
                 ></textarea>
                 <div *ngIf="isNestedFieldInvalid('company', 'bs')" class="invalid-feedback">
@@ -331,7 +325,6 @@
           </div>
         </div>
 
-        <!-- Form Actions -->
         <div class="card mt-4">
           <div class="card-body">
             <div class="d-flex justify-content-between">
@@ -342,7 +335,7 @@
                 [disabled]="isSaving"
               >
                 <i class="bi bi-x-circle me-2"></i>
-                Cancelar
+                {{ 'common.cancel' | translate }}
               </button>
               <button 
                 type="submit" 
@@ -351,7 +344,7 @@
               >
                 <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                 <i *ngIf="!isSaving" class="bi bi-check-circle me-2"></i>
-                {{ isSaving ? 'Guardando...' : (isEditMode ? 'Actualizar Usuario' : 'Crear Usuario') }}
+                {{ isSaving ? ('common.loading' | translate) : (isEditMode ? ('users.updateUser' | translate) : ('users.createUser' | translate)) }}
               </button>
             </div>
           </div>

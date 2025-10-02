@@ -4,7 +4,6 @@
   (mouseenter)="onMouseEnter()" 
   (mouseleave)="onMouseLeave()"
 >
-  <!-- Sidebar Header -->
   <div class="sidebar-header">
     <div class="logo-container">
       <i class="bi bi-grid-3x3-gap-fill logo-icon"></i>
@@ -12,7 +11,6 @@
     </div>
   </div>
 
-  <!-- Navigation Items -->
   <nav class="sidebar-nav">
     <ul class="nav-list">
       <li 
@@ -28,13 +26,31 @@
           [attr.title]="!isExpanded ? item.label : null"
         >
           <i [class]="item.icon + ' nav-icon'"></i>
-          <span class="nav-text" *ngIf="isExpanded">{{ item.label }}</span>
+          <span class="nav-text" *ngIf="isExpanded">{{ item.label | translate }}</span>
         </a>
       </li>
     </ul>
   </nav>
 
-  <!-- Sidebar Footer -->
+  <div class="language-selector" *ngIf="isExpanded">
+    <div class="language-label">
+      <i class="bi bi-translate me-2"></i>
+      {{ 'navigation.language' | translate }}
+    </div>
+    <div class="language-options">
+      <button 
+        *ngFor="let lang of availableLanguages"
+        class="btn btn-sm language-btn"
+        [class.active]="currentLanguage === lang.code"
+        (click)="changeLanguage(lang.code)"
+        [title]="lang.name"
+      >
+        <span class="language-flag">{{ lang.code === 'es' ? '🇪🇸' : '🇺🇸' }}</span>
+        <span class="language-name">{{ lang.name }}</span>
+      </button>
+    </div>
+  </div>
+
   <div class="sidebar-footer" *ngIf="isExpanded && currentUser">
     <div class="user-info">
       <div class="user-avatar">
@@ -47,7 +63,7 @@
     </div>
     <button class="btn btn-outline-light btn-sm logout-btn" (click)="logout()">
       <i class="bi bi-box-arrow-right me-1"></i>
-      Cerrar Sesión
+      {{ 'auth.logout' | translate }}
     </button>
   </div>
 </div>
