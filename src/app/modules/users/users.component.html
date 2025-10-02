@@ -1,1 +1,418 @@
-<p>users works!</p>
+<div class="container-fluid p-4">
+  <div class="row">
+    <div class="col-12">
+      <!-- Header -->
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
+        <h1 class="mb-0">
+          <i class="bi bi-people me-2"></i>
+          Gestión de Usuarios
+        </h1>
+        <button 
+          *ngIf="canCreate()"
+          class="btn btn-primary w-100 w-md-auto"
+          (click)="navigateToCreateUser()"
+        >
+          <i class="bi bi-person-plus me-2"></i>
+          <span class="d-none d-sm-inline">Crear Usuario</span>
+          <span class="d-sm-none">Crear</span>
+        </button>
+      </div>
+
+      <!-- Featured Users Section -->
+      <div *ngIf="featuredUsers.length > 0" class="card mb-4">
+        <div class="card-header bg-warning text-dark">
+          <h5 class="mb-0">
+            <i class="bi bi-star-fill me-2"></i>
+            Usuarios Destacados
+            <span class="badge bg-dark ms-2">{{ featuredUsers.length }}</span>
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div *ngFor="let user of featuredUsers" class="col-md-6 col-lg-4">
+              <div class="featured-user-card">
+                <div class="d-flex align-items-center">
+                  <div class="user-avatar me-3">
+                    <i class="bi bi-person-circle text-warning"></i>
+                  </div>
+                  <div class="flex-grow-1">
+                    <h6 class="mb-1">{{ user.name }}</h6>
+                    <small class="text-muted">&#64;{{ user.username }}</small>
+                    <br>
+                    <small class="text-muted">{{ user.company.name }}</small>
+                  </div>
+                  <div class="featured-actions">
+                    <button 
+                      type="button" 
+                      class="btn btn-sm btn-outline-primary me-1"
+                      (click)="showUserDetails(user)"
+                      title="Ver detalles"
+                    >
+                      <i class="bi bi-eye"></i>
+                    </button>
+                    <button 
+                      type="button" 
+                      class="btn btn-sm btn-outline-danger"
+                      (click)="removeFromFeatured(user.id)"
+                      title="Quitar de destacados"
+                    >
+                      <i class="bi bi-star"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters Card -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="bi bi-funnel me-2"></i>
+            Filtros de Búsqueda
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-3">
+              <label for="nameFilter" class="form-label">
+                <i class="bi bi-person me-1"></i>
+                Filtrar por Nombre
+              </label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="nameFilter"
+                [(ngModel)]="nameFilter"
+                (input)="applyFilters()"
+                placeholder="Ingresa el nombre..."
+              >
+            </div>
+            <div class="col-md-3">
+              <label for="emailFilter" class="form-label">
+                <i class="bi bi-envelope me-1"></i>
+                Filtrar por Email
+              </label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="emailFilter"
+                [(ngModel)]="emailFilter"
+                (input)="applyFilters()"
+                placeholder="Ingresa el email..."
+              >
+            </div>
+            <div class="col-md-3">
+              <label for="companyFilter" class="form-label">
+                <i class="bi bi-building me-1"></i>
+                Filtrar por Empresa
+              </label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="companyFilter"
+                [(ngModel)]="companyFilter"
+                (input)="applyFilters()"
+                placeholder="Ingresa la empresa..."
+              >
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+              <button 
+                type="button" 
+                class="btn btn-outline-secondary me-2"
+                (click)="clearFilters()"
+              >
+                <i class="bi bi-x-circle me-1"></i>
+                Limpiar
+              </button>
+              <span class="badge bg-primary fs-6">
+                {{ filteredUsers.length }} usuarios
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando usuarios...</span>
+        </div>
+        <p class="mt-3 text-muted">Cargando usuarios...</p>
+      </div>
+
+      <!-- Users Table -->
+      <div *ngIf="!isLoading" class="card">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="bi bi-table me-2"></i>
+            Lista de Usuarios
+          </h5>
+        </div>
+        <div class="card-body">
+          <!-- Desktop Table View -->
+          <div class="d-none d-lg-block">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Empresa</th>
+                    <th scope="col">Teléfono</th>
+                    <th scope="col" class="text-center">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let user of filteredUsers" class="user-row">
+                    <td>
+                      <span class="badge bg-secondary">{{ user.id }}</span>
+                    </td>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <div class="user-avatar me-3">
+                          <i class="bi bi-person-circle"></i>
+                        </div>
+                        <div>
+                          <div class="fw-semibold">{{ user.name }}</div>
+                          <small class="text-muted">&#64;{{ user.username }}</small>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <i class="bi bi-envelope me-1 text-primary"></i>
+                      {{ user.email }}
+                    </td>
+                    <td>
+                      <i class="bi bi-building me-1 text-info"></i>
+                      {{ user.company.name }}
+                    </td>
+                    <td>
+                      <i class="bi bi-telephone me-1 text-success"></i>
+                      {{ user.phone }}
+                    </td>
+                    <td class="text-center">
+                      <div class="btn-group" role="group">
+                        <button 
+                          type="button" 
+                          class="btn btn-sm btn-outline-info"
+                          (click)="showUserDetails(user)"
+                          title="Ver detalles"
+                        >
+                          <i class="bi bi-eye"></i>
+                        </button>
+                        <button 
+                          *ngIf="canUpdate()"
+                          type="button" 
+                          class="btn btn-sm btn-outline-warning"
+                          (click)="editUserWithPermission(user)"
+                          title="Editar usuario"
+                        >
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                        <button 
+                          *ngIf="!isUserFeatured(user.id)"
+                          type="button" 
+                          class="btn btn-sm btn-outline-success"
+                          (click)="addToFeatured(user)"
+                          title="Agregar a destacados"
+                        >
+                          <i class="bi bi-star"></i>
+                        </button>
+                        <button 
+                          *ngIf="isUserFeatured(user.id)"
+                          type="button" 
+                          class="btn btn-sm btn-success"
+                          (click)="removeFromFeatured(user.id)"
+                          title="Quitar de destacados"
+                        >
+                          <i class="bi bi-star-fill"></i>
+                        </button>
+                        <button 
+                          *ngIf="canDelete()"
+                          type="button" 
+                          class="btn btn-sm btn-outline-danger"
+                          (click)="deleteUserWithPermission(user)"
+                          title="Eliminar usuario"
+                        >
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Mobile Cards View -->
+          <div class="d-lg-none">
+            <div class="row g-3">
+              <div *ngFor="let user of filteredUsers" class="col-12">
+                <div class="card user-card h-100">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                      <div class="d-flex align-items-center">
+                        <div class="user-avatar me-3">
+                          <i class="bi bi-person-circle"></i>
+                        </div>
+                        <div>
+                          <h6 class="card-title mb-1">{{ user.name }}</h6>
+                          <small class="text-muted">&#64;{{ user.username }}</small>
+                          <span class="badge bg-secondary ms-2">{{ user.id }}</span>
+                        </div>
+                      </div>
+                      <div class="dropdown">
+                        <button 
+                          class="btn btn-sm btn-outline-secondary dropdown-toggle" 
+                          type="button" 
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          <i class="bi bi-three-dots-vertical"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li>
+                            <button 
+                              class="dropdown-item" 
+                              (click)="showUserDetails(user)"
+                            >
+                              <i class="bi bi-eye me-2"></i>Ver detalles
+                            </button>
+                          </li>
+                          <li *ngIf="canUpdate()">
+                            <button 
+                              class="dropdown-item" 
+                              (click)="editUserWithPermission(user)"
+                            >
+                              <i class="bi bi-pencil me-2"></i>Editar
+                            </button>
+                          </li>
+                          <li *ngIf="!isUserFeatured(user.id)">
+                            <button 
+                              class="dropdown-item" 
+                              (click)="addToFeatured(user)"
+                            >
+                              <i class="bi bi-star me-2"></i>Destacar
+                            </button>
+                          </li>
+                          <li *ngIf="isUserFeatured(user.id)">
+                            <button 
+                              class="dropdown-item" 
+                              (click)="removeFromFeatured(user.id)"
+                            >
+                              <i class="bi bi-star-fill me-2"></i>Quitar destacado
+                            </button>
+                          </li>
+                          <li *ngIf="canDelete()">
+                            <hr class="dropdown-divider">
+                            <button 
+                              class="dropdown-item text-danger" 
+                              (click)="deleteUserWithPermission(user)"
+                            >
+                              <i class="bi bi-trash me-2"></i>Eliminar
+                            </button>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    
+                    <div class="row g-2">
+                      <div class="col-12">
+                        <div class="d-flex align-items-center text-muted">
+                          <i class="bi bi-envelope me-2 text-primary"></i>
+                          <small>{{ user.email }}</small>
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="d-flex align-items-center text-muted">
+                          <i class="bi bi-building me-2 text-info"></i>
+                          <small>{{ user.company.name }}</small>
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="d-flex align-items-center text-muted">
+                          <i class="bi bi-telephone me-2 text-success"></i>
+                          <small>{{ user.phone }}</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- No Results Message -->
+      <div *ngIf="!isLoading && filteredUsers.length === 0" class="text-center py-5">
+        <i class="bi bi-search display-1 text-muted"></i>
+        <h4 class="mt-3 text-muted">No se encontraron usuarios</h4>
+        <p class="text-muted">Intenta ajustar los filtros de búsqueda</p>
+        <button class="btn btn-primary" (click)="clearFilters()">
+          <i class="bi bi-arrow-clockwise me-1"></i>
+          Limpiar Filtros
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div 
+  class="modal fade" 
+  [class.show]="showDeleteModal" 
+  [style.display]="showDeleteModal ? 'block' : 'none'"
+  tabindex="-1"
+  role="dialog"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content delete-modal-content">
+      <div class="modal-header border-0">
+        <h5 class="modal-title text-center w-100">
+          <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
+          Confirmar Eliminación
+        </h5>
+      </div>
+      <div class="modal-body text-center">
+        <div class="delete-icon mb-3">
+          <i class="bi bi-person-x-fill"></i>
+        </div>
+        <h6 class="mb-3">¿Estás seguro de que deseas eliminar este usuario?</h6>
+        <p class="text-muted mb-0" *ngIf="userToDelete">
+          <strong>{{ userToDelete.name }}</strong><br>
+          <small>{{ userToDelete.email }}</small>
+        </p>
+        <div class="alert alert-warning mt-3" role="alert">
+          <i class="bi bi-exclamation-triangle me-2"></i>
+          Esta acción no se puede deshacer.
+        </div>
+      </div>
+      <div class="modal-footer border-0 justify-content-center">
+        <button 
+          type="button" 
+          class="btn btn-outline-secondary me-2"
+          (click)="cancelDelete()"
+          [disabled]="isDeleting"
+        >
+          <i class="bi bi-x-circle me-1"></i>
+          Cancelar
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-danger"
+          (click)="confirmDelete()"
+          [disabled]="isDeleting"
+        >
+          <span *ngIf="isDeleting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          <i *ngIf="!isDeleting" class="bi bi-trash me-1"></i>
+          {{ isDeleting ? 'Eliminando...' : 'Eliminar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

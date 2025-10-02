@@ -35,15 +35,19 @@
   </nav>
 
   <!-- Sidebar Footer -->
-  <div class="sidebar-footer" *ngIf="isExpanded">
+  <div class="sidebar-footer" *ngIf="isExpanded && currentUser">
     <div class="user-info">
       <div class="user-avatar">
         <i class="bi bi-person-circle"></i>
       </div>
       <div class="user-details">
-        <span class="user-name">Usuario</span>
-        <span class="user-role">Administrador</span>
+        <span class="user-name">{{ currentUser.name }}</span>
+        <span class="user-role">{{ getUserRoleLabel() }}</span>
       </div>
     </div>
+    <button class="btn btn-outline-light btn-sm logout-btn" (click)="logout()">
+      <i class="bi bi-box-arrow-right me-1"></i>
+      Cerrar Sesión
+    </button>
   </div>
 </div>

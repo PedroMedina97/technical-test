@@ -1,0 +1,161 @@
+<div class="container-fluid p-4">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando usuario...</span>
+    </div>
+    <p class="mt-3 text-muted">Cargando datos del usuario...</p>
+  </div>
+
+  <!-- User Detail Content -->
+  <div *ngIf="!isLoading && user" class="row">
+    <div class="col-12">
+      <!-- Header -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h1 class="mb-1">
+            <i class="bi bi-person-circle me-2 text-primary"></i>
+            {{ user.name }}
+          </h1>
+          <p class="text-muted mb-0">&#64;{{ user.username }}</p>
+        </div>
+        <div class="d-flex gap-2">
+          <button 
+            type="button" 
+            class="btn btn-outline-secondary"
+            (click)="goBack()"
+          >
+            <i class="bi bi-arrow-left me-1"></i>
+            Volver
+          </button>
+          <button 
+            type="button" 
+            class="btn btn-primary"
+            (click)="editUser()"
+          >
+            <i class="bi bi-pencil me-1"></i>
+            Editar
+          </button>
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <!-- Personal Information -->
+        <div class="col-sm-12 col-lg-4">
+          <div class="card h-100">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0">
+                <i class="bi bi-person me-2"></i>
+                Información Personal
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-12">
+                  <label class="form-label fw-semibold">
+                    <i class="bi bi-envelope me-1"></i>
+                    Email
+                  </label>
+                  <p class="form-control-plaintext">{{ user.email }}</p>
+                </div>
+                <div class="col-12">
+                  <label class="form-label fw-semibold">
+                    <i class="bi bi-telephone me-1"></i>
+                    Teléfono
+                  </label>
+                  <p class="form-control-plaintext">{{ user.phone }}</p>
+                </div>
+                <div class="col-12">
+                  <label class="form-label fw-semibold">
+                    <i class="bi bi-globe me-1"></i>
+                    Sitio Web
+                  </label>
+                  <p class="form-control-plaintext">
+                    <a href="http://{{ user.website }}" target="_blank" class="text-decoration-none">
+                      {{ user.website }}
+                      <i class="bi bi-box-arrow-up-right ms-1"></i>
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Address Information -->
+        <div class="col-sm-12 col-lg-4">
+          <div class="card h-100">
+            <div class="card-header bg-success text-white">
+              <h5 class="mb-0">
+                <i class="bi bi-geo-alt me-2"></i>
+                Información de Dirección
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-12">
+                  <label class="form-label fw-semibold">
+                    <i class="bi bi-signpost me-1"></i>
+                    Dirección Completa
+                  </label>
+                  <p class="form-control-plaintext">
+                    {{ user.address.street }}, {{ user.address.suite }}<br>
+                    {{ user.address.city }}, {{ user.address.zipcode }}
+                  </p>
+                </div>
+                <div class="col-12">
+                  <label class="form-label fw-semibold">
+                    <i class="bi bi-geo me-1"></i>
+                    Coordenadas
+                  </label>
+                  <p class="form-control-plaintext">
+                    <span class="badge bg-secondary me-2">Lat: {{ user.address.geo.lat }}</span>
+                    <span class="badge bg-secondary">Lng: {{ user.address.geo.lng }}</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Company Information -->
+        <div class="col-sm-12 col-lg-4">
+          <div class="card h-100">
+            <div class="card-header bg-info text-white">
+              <h5 class="mb-0">
+                <i class="bi bi-building me-2"></i>
+                Información de la Empresa
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-12">
+                  <label class="form-label fw-semibold">
+                    <i class="bi bi-building me-1"></i>
+                    Nombre de la Empresa
+                  </label>
+                  <p class="form-control-plaintext">{{ user.company.name }}</p>
+                </div>
+                <div class="col-12">
+                  <label class="form-label fw-semibold">
+                    <i class="bi bi-quote me-1"></i>
+                    Eslogan
+                  </label>
+                  <p class="form-control-plaintext">{{ user.company.catchPhrase }}</p>
+                </div>
+                <div class="col-12">
+                  <label class="form-label fw-semibold">
+                    <i class="bi bi-info-circle me-1"></i>
+                    Descripción del Negocio
+                  </label>
+                  <p class="form-control-plaintext">{{ user.company.bs }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

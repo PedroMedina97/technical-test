@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService, LoginCredentials } from '../../services/auth.service';
+import { AlertService } from '../../services/alert.service';
 
 @Component({
   selector: 'app-login',
@@ -16,11 +18,13 @@ export class LoginComponent {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private authService: AuthService,
+    private alertService: AlertService
   ) {
     this.loginForm = this.fb.group({
       usernameOrEmail: ['', [Validators.required, Validators.minLength(3)]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(3)]]
     });
   }
 
@@ -40,14 +44,24 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       this.isLoading = true;
       
-      // Simulate login process
-      setTimeout(() => {
-        this.isLoading = false;
-        // Navigate to home after successful login
+      const credentials: LoginCredentials = {
+        usernameOrEmail: this.loginForm.value.usernameOrEmail,
+        password: this.loginForm.value.password
+      };
+
+      const result = this.authService.login(credentials);
+      
+      if (result.success) {
+        this.alertService.success(result.message, 'Inicio de sesión exitoso');
         this.router.navigate(['/home']);
-      }, 2000);
+      } else {
+        this.alertService.error(result.message, 'Error de autenticación');
+      }
+      
+      this.isLoading = false;
     } else {
       this.markFormGroupTouched();
+      this.alertService.warning('Por favor, complete todos los campos requeridos', 'Formulario incompleto');
     }
   }
 

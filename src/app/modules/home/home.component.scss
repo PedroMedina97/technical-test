@@ -222,6 +222,7 @@
   pointer-events: none;
 }
 
+
 // Animation for cards
 @keyframes fadeInUp {
   from {
@@ -245,3 +246,26 @@
 .user-card:nth-child(4) { animation-delay: 0.4s; }
 .user-card:nth-child(5) { animation-delay: 0.5s; }
 .user-card:nth-child(6) { animation-delay: 0.6s; }
+
+// Featured Users Styling
+.featured-user-card {
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+  }
+
+  .user-avatar i {
+    font-size: 2rem;
+  }
+
+  .featured-actions {
+    display: flex;
+    gap: 0.25rem;
+  }
+}

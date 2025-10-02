@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { AuthService, User } from '../../../services/auth.service';
 
 interface NavigationItem {
   path: string;
@@ -15,9 +17,11 @@ interface NavigationItem {
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit, OnDestroy {
   isExpanded = false;
   currentRoute = '';
+  currentUser: User | null = null;
+  private userSubscription: Subscription = new Subscription();
 
   navigationItems: NavigationItem[] = [
     {
@@ -34,11 +38,24 @@ export class SidebarComponent {
     }
   ];
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {
     this.updateActiveRoute();
     this.router.events.subscribe(() => {
       this.updateActiveRoute();
     });
+  }
+
+  ngOnInit(): void {
+    this.userSubscription = this.authService.currentUser$.subscribe(
+      (user: User | null) => this.currentUser = user
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.userSubscription.unsubscribe();
   }
 
   private updateActiveRoute() {
@@ -58,5 +75,14 @@ export class SidebarComponent {
 
   navigateTo(path: string) {
     this.router.navigate([path]);
+  }
+
+  logout() {
+    this.authService.logout();
+  }
+
+  getUserRoleLabel(): string {
+    if (!this.currentUser) return '';
+    return this.currentUser.role === 'manager' ? 'Manager' : 'Coordinador';
   }
 }
