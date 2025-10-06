@@ -21,9 +21,6 @@ export class AlertService {
 
   constructor(private translationService: TranslationService) {}
 
-  /**
-   * Show success alert
-   */
   success(message: string, title?: string, options?: Partial<Alert>): void {
     this.addAlert({
       type: 'success',
@@ -36,9 +33,6 @@ export class AlertService {
     });
   }
 
-  /**
-   * Show error alert
-   */
   error(message: string, title?: string, options?: Partial<Alert>): void {
     this.addAlert({
       type: 'danger',
@@ -51,9 +45,6 @@ export class AlertService {
     });
   }
 
-  /**
-   * Show warning alert
-   */
   warning(message: string, title?: string, options?: Partial<Alert>): void {
     this.addAlert({
       type: 'warning',
@@ -66,9 +57,6 @@ export class AlertService {
     });
   }
 
-  /**
-   * Show info alert
-   */
   info(message: string, title?: string, options?: Partial<Alert>): void {
     this.addAlert({
       type: 'info',
@@ -81,9 +69,6 @@ export class AlertService {
     });
   }
 
-  /**
-   * Add alert to the list
-   */
   private addAlert(alert: Omit<Alert, 'id'>): void {
     const alerts = this.alertsSubject.value;
     const newAlert: Alert = {
@@ -93,7 +78,6 @@ export class AlertService {
     
     this.alertsSubject.next([...alerts, newAlert]);
 
-    // Auto close if enabled
     if (newAlert.autoClose && newAlert.duration) {
       setTimeout(() => {
         this.removeAlert(newAlert.id);
@@ -101,44 +85,27 @@ export class AlertService {
     }
   }
 
-  /**
-   * Remove alert by id
-   */
   removeAlert(id: string): void {
     const alerts = this.alertsSubject.value.filter(alert => alert.id !== id);
     this.alertsSubject.next(alerts);
   }
 
-  /**
-   * Clear all alerts
-   */
   clearAll(): void {
     this.alertsSubject.next([]);
   }
 
-  /**
-   * Get current alerts
-   */
   getAlerts(): Alert[] {
     return this.alertsSubject.value;
   }
 
-  /**
-   * Generate unique id for alerts
-   */
   private generateId(): string {
     return Math.random().toString(36).substr(2, 9);
   }
 
-  /**
-   * Translate message if it's a translation key
-   */
   private translateMessage(message: string): string {
-    // If message contains dots, it's likely a translation key
     if (message.includes('.')) {
       return this.translationService.translate(message);
     }
-    // Otherwise, return the message as is
     return message;
   }
 }

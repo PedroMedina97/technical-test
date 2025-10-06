@@ -56,9 +56,8 @@ export class FeaturedUsersService {
   addFeaturedUser(user: User): boolean {
     const currentFeatured = this.getFeaturedUsers();
     
-    // Check if user is already featured
     if (currentFeatured.some(featured => featured.id === user.id)) {
-      return false; // User already featured
+      return false;
     }
 
     const updatedFeatured = [...currentFeatured, user];
@@ -71,7 +70,7 @@ export class FeaturedUsersService {
     const updatedFeatured = currentFeatured.filter(user => user.id !== userId);
     
     if (updatedFeatured.length === currentFeatured.length) {
-      return false; // User was not featured
+      return false;
     }
 
     this.saveFeaturedUsers(updatedFeatured);

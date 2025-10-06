@@ -290,25 +290,19 @@ export class TranslationService {
     this.loadTranslations();
   }
 
-  /**
-   * Get current language
-   */
+
   getCurrentLanguage(): Language {
     return this.currentLanguageSubject.value;
   }
 
-  /**
-   * Set language
-   */
+
   setLanguage(language: Language): void {
     this.currentLanguageSubject.next(language);
     localStorage.setItem(this.STORAGE_KEY, language);
     this.loadTranslations();
   }
 
-  /**
-   * Get translation by key
-   */
+
   translate(key: string, params?: { [key: string]: string | number }): string {
     const translation = this.getTranslationByKey(key);
     
@@ -319,9 +313,7 @@ export class TranslationService {
     return translation;
   }
 
-  /**
-   * Get translation by key with fallback
-   */
+ 
   private getTranslationByKey(key: string): string {
     const currentLang = this.getCurrentLanguage();
     const keys = key.split('.');
@@ -331,13 +323,13 @@ export class TranslationService {
       if (translation && typeof translation === 'object' && k in translation) {
         translation = translation[k];
       } else {
-        // Fallback to Spanish if translation not found
+       
         translation = this.translations['es'];
         for (const fallbackKey of keys) {
           if (translation && typeof translation === 'object' && fallbackKey in translation) {
             translation = translation[fallbackKey];
           } else {
-            return key; // Return key if no translation found
+            return key; 
           }
         }
         break;
@@ -347,9 +339,6 @@ export class TranslationService {
     return typeof translation === 'string' ? translation : key;
   }
 
-  /**
-   * Interpolate parameters in translation string
-   */
   private interpolateParams(translation: string, params: { [key: string]: string | number }): string {
     let result = translation;
     
@@ -361,9 +350,6 @@ export class TranslationService {
     return result;
   }
 
-  /**
-   * Load language from localStorage
-   */
   private loadLanguageFromStorage(): void {
     try {
       const storedLanguage = localStorage.getItem(this.STORAGE_KEY) as Language;
@@ -378,18 +364,13 @@ export class TranslationService {
     }
   }
 
-  /**
-   * Load translations from embedded data
-   */
+
   private loadTranslations(): void {
     const currentLang = this.getCurrentLanguage();
     const translations = this.translations[currentLang];
     this.translationsSubject.next(translations);
   }
 
-  /**
-   * Get available languages
-   */
   getAvailableLanguages(): { code: Language; name: string }[] {
     return [
       { code: 'es', name: 'Español' },
@@ -397,16 +378,12 @@ export class TranslationService {
     ];
   }
 
-  /**
-   * Check if current language is RTL
-   */
+
   isRTL(): boolean {
-    return false; // Neither Spanish nor English are RTL
+    return false; 
   }
 
-  /**
-   * Get language direction
-   */
+
   getLanguageDirection(): 'ltr' | 'rtl' {
     return 'ltr';
   }
